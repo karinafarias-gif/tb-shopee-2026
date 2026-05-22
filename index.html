@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TB Shopee · Copa 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Figtree:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul:   #4EC8D4;
+    --verde:  #2E9E55;
+    --amarelo:#F5D020;
+    --shopee: #EE4D2D;
+    --branco: #ffffff;
+    --chumbo: #0d1a14;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--chumbo); font-family:'Figtree',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  .pitch-bg {
+    position:fixed; inset:0; z-index:0;
+    background: repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(46,158,85,0.04) 60px,rgba(46,158,85,0.04) 120px),
+                linear-gradient(180deg,#0d1f1a 0%,#0a1a14 100%);
+  }
+  .pitch-lines {
+    position:fixed; inset:0; z-index:0; opacity:0.06;
+    background-image: linear-gradient(rgba(78,200,212,0.8) 1px,transparent 1px), linear-gradient(90deg,rgba(78,200,212,0.8) 1px,transparent 1px);
+    background-size:80px 80px; animation:slide 20s linear infinite;
+  }
+  @keyframes slide { to { background-position:80px 80px; } }
+
+  .ball { position:fixed; border-radius:50%; border:2px solid rgba(78,200,212,0.07); animation:float linear infinite; z-index:0; }
+  .ball:nth-child(1){width:200px;height:200px;top:-60px;left:-60px;animation-duration:28s;}
+  .ball:nth-child(2){width:100px;height:100px;bottom:8%;right:-20px;animation-duration:18s;animation-delay:-7s;}
+  .ball:nth-child(3){width:50px;height:50px;top:45%;left:3%;animation-duration:13s;animation-delay:-3s;}
+  @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-18px) rotate(180deg);} }
+
+  .container { position:relative; z-index:10; max-width:620px; margin:0 auto; padding:36px 20px 60px; }
+
+  /* HEADER */
+  .header { text-align:center; margin-bottom:32px; animation:fadeDown .7s ease both; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(20px);}  to{opacity:1;transform:translateY(0);} }
+
+  .tag {
+    display:inline-block; background:var(--shopee); color:#fff;
+    font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:3px;
+    padding:5px 16px; border-radius:2px; margin-bottom:16px;
+  }
+
+  /* SHOPITO */
+  .shopito-wrap {
+    display:flex; justify-content:center; margin-bottom:12px;
+  }
+  .shopito-wrap img {
+    width:110px;
+    filter:drop-shadow(0 8px 24px rgba(245,208,32,0.25));
+    animation:bounce 2.5s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+  .header h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(38px,9vw,66px);
+    line-height:.92; color:#fff; letter-spacing:2px; margin-bottom:8px;
+  }
+  .header h1 .azul   { color:var(--azul); }
+  .header h1 .amarelo{ color:var(--amarelo); }
+  .header p { font-size:15px; color:rgba(255,255,255,.5); line-height:1.65; max-width:420px; margin:14px auto 0; }
+
+  /* CARD */
+  .card {
+    background:rgba(255,255,255,.04); border:1px solid rgba(78,200,212,.14);
+    border-radius:20px; padding:32px 28px; backdrop-filter:blur(10px);
+    animation:fadeUp .7s ease .2s both;
+  }
+
+  /* REGRAS */
+  .rules-block {
+    background:rgba(46,158,85,.1); border:1px solid rgba(46,158,85,.28);
+    border-radius:14px; padding:18px 20px; margin-bottom:24px;
+  }
+  .rules-title {
+    font-family:'Bebas Neue',sans-serif; font-size:17px; color:var(--azul);
+    letter-spacing:2px; margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .rules-title::before { content:'⚽'; font-size:15px; }
+  .rule-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:9px; font-size:14px; color:rgba(255,255,255,.78); line-height:1.5; }
+  .rule-item:last-child { margin-bottom:0; }
+  .rule-dot { min-width:22px; height:22px; background:var(--verde); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; margin-top:1px; }
+  .rule-item strong { color:var(--amarelo); }
+
+  /* ALERTA NOME */
+  .nome-alert {
+    background:linear-gradient(135deg,rgba(238,77,45,.14),rgba(238,77,45,.04));
+    border:1px solid rgba(238,77,45,.38); border-left:4px solid var(--shopee);
+    border-radius:12px; padding:16px 18px; margin-bottom:24px;
+  }
+  .alert-title { font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:2px; color:var(--shopee); margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+  .nome-alert p { font-size:13px; color:rgba(255,255,255,.72); line-height:1.6; }
+  .exemplo { display:inline-block; background:rgba(238,77,45,.2); border-radius:6px; padding:3px 9px; font-weight:700; font-size:13px; color:#fff; margin-top:7px; letter-spacing:.4px; }
+
+  /* CAMPOS */
+  .field-group { margin-bottom:20px; }
+  .field-group label { display:block; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:7px; }
+  .field-group input {
+    width:100%; background:rgba(255,255,255,.06); border:1.5px solid rgba(255,255,255,.11);
+    border-radius:10px; padding:13px 15px; font-family:'Figtree',sans-serif; font-size:15px;
+    color:#fff; outline:none; transition:border-color .2s,background .2s;
+  }
+  .field-group input:focus { border-color:var(--azul); background:rgba(78,200,212,.06); }
+  .field-group input::placeholder { color:rgba(255,255,255,.22); }
+  .field-group input.error { border-color:var(--shopee); }
+
+  /* HINT EMAIL */
+  .email-hint { font-size:11px; color:rgba(255,255,255,.3); margin-top:5px; }
+  .email-hint.warn { color:var(--shopee); }
+
+  /* UPLOAD */
+  .upload-zone {
+    position:relative; border:2px dashed rgba(78,200,212,.28); border-radius:14px;
+    padding:28px 20px; text-align:center; cursor:pointer; transition:all .25s;
+    background:rgba(78,200,212,.03); overflow:hidden;
+  }
+  .upload-zone:hover,.upload-zone.dragover { border-color:var(--azul); background:rgba(78,200,212,.07); }
+  .upload-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .upload-icon { font-size:32px; margin-bottom:8px; display:block; }
+  .upload-title { font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:2px; color:var(--azul); margin-bottom:5px; }
+  .upload-sub { font-size:12px; color:rgba(255,255,255,.38); line-height:1.6; }
+  .upload-sub strong { color:var(--shopee); }
+
+  .preview-wrap { display:none; margin-top:14px; border-radius:10px; overflow:hidden; position:relative; }
+  .preview-wrap img { width:100%; max-height:200px; object-fit:cover; object-position:top; display:block; border-radius:10px; }
+  .preview-badge { position:absolute; top:10px; right:10px; background:var(--verde); color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+
+  .filename-confirm,.filename-warn { display:none; margin-top:9px; border-radius:8px; padding:9px 13px; font-size:13px; color:rgba(255,255,255,.7); }
+  .filename-confirm { background:rgba(46,158,85,.14); border:1px solid rgba(46,158,85,.28); }
+  .filename-confirm span { font-weight:700; color:var(--amarelo); }
+  .filename-warn { background:rgba(238,77,45,.09); border:1px solid rgba(238,77,45,.28); }
+  .filename-warn span { color:var(--shopee); font-weight:700; }
+
+  /* BOTÃO */
+  .btn-submit {
+    width:100%; padding:17px; background:var(--shopee); color:#fff; border:none;
+    border-radius:12px; font-family:'Bebas Neue',sans-serif; font-size:21px; letter-spacing:3px;
+    cursor:pointer; margin-top:6px; position:relative; overflow:hidden; transition:transform .15s,background .2s;
+  }
+  .btn-submit::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); transform:translateX(-100%); transition:transform .4s; }
+  .btn-submit:hover { background:#d63e20; transform:translateY(-2px); }
+  .btn-submit:hover::after { transform:translateX(100%); }
+  .btn-submit:active { transform:translateY(0); }
+  .btn-submit:disabled { background:#666; cursor:not-allowed; transform:none; }
+
+  /* LOADING */
+  .loading-bar {
+    display:none; height:4px; background:rgba(255,255,255,.1); border-radius:2px; margin-top:14px; overflow:hidden;
+  }
+  .loading-bar-inner { height:100%; background:var(--azul); border-radius:2px; width:0%; transition:width .3s; animation:loadpulse 1.5s ease-in-out infinite; }
+  @keyframes loadpulse { 0%{opacity:1;} 50%{opacity:.5;} 100%{opacity:1;} }
+
+  /* SUCESSO */
+  .success-screen { display:none; text-align:center; padding:16px 0; animation:fadeUp .5s ease both; }
+  .success-screen .big-emoji { font-size:60px; margin-bottom:14px; display:block; }
+  .success-screen h2 { font-family:'Bebas Neue',sans-serif; font-size:34px; letter-spacing:2px; color:var(--azul); margin-bottom:10px; }
+  .success-screen p { font-size:15px; color:rgba(255,255,255,.55); line-height:1.65; }
+
+  /* ERRO GERAL */
+  .error-msg { display:none; background:rgba(238,77,45,.12); border:1px solid rgba(238,77,45,.3); border-radius:8px; padding:10px 14px; font-size:13px; color:rgba(255,255,255,.75); margin-top:12px; }
+
+  .divider { height:1px; background:rgba(255,255,255,.07); margin:22px 0; }
+  .footer { text-align:center; margin-top:28px; font-size:12px; color:rgba(255,255,255,.18); animation:fadeUp .7s ease .4s both; }
+  .footer strong { color:var(--shopee); }
+</style>
+</head>
+<body>
+
+<div class="pitch-bg"></div>
+<div class="pitch-lines"></div>
+<div class="ball"></div><div class="ball"></div><div class="ball"></div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="tag">SHOPEE TB · COPA 2026</div>
+
+    <div class="shopito-wrap">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:64px;line-height:1;filter:drop-shadow(0 4px 20px rgba(245,208,32,0.35))">🏆⚽🇧🇷</div>
+    </div>
+
+    <h1>
+      PREPARADO PARA<br>
+      O <span class="azul">MAIOR</span><br>
+      <span class="amarelo">TB DA SHOPEE?</span>
+    </h1>
+    <p>O nosso Team Building vai ter um esquema especial temático Copa 2026 e precisamos da sua ajuda com uma coisa importante antes do evento. Não vai demorar nem 2 minutos!</p>
+  </div>
+
+  <div class="card">
+
+    <!-- REGRAS DA FOTO -->
+    <div class="rules-block">
+      <div class="rules-title">COMO DEVE SER SUA FOTO</div>
+      <div class="rule-item"><div class="rule-dot">1</div><div><strong>Rosto bem visível</strong> — olhando para a câmera, sem óculos escuros ou bonés</div></div>
+      <div class="rule-item"><div class="rule-dot">2</div><div><strong>Enquadramento do peito para cima</strong> — como um retrato, não selfie colada no rosto</div></div>
+      <div class="rule-item"><div class="rule-dot">3</div><div><strong>Fundo neutro</strong> — parede lisa ou fundo claro. Evite ambientes bagunçados atrás</div></div>
+      <div class="rule-item"><div class="rule-dot">4</div><div><strong>Boa iluminação</strong> — sem sombras no rosto. Luz natural é ótima opção</div></div>
+      <div class="rule-item"><div class="rule-dot">5</div><div><strong>Alta qualidade</strong> — foto direta pela câmera do celular, sem screenshot ou foto de foto</div></div>
+    </div>
+
+    <!-- ALERTA NOME DO ARQUIVO -->
+    <div class="nome-alert">
+      <div class="alert-title">🚨 IMPORTANTE: NOME DO ARQUIVO</div>
+      <p>Antes de enviar, <strong>renomeie o arquivo</strong> com seu nome e sobrenome (ou nome composto). É fundamental para que tudo funcione certinho lá na frente!</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+        <div class="exemplo">Beatriz Silva.jpg</div>
+        <div class="exemplo">Ana Paula Souza.png</div>
+        <div class="exemplo">Carlos Eduardo.jpg</div>
+      </div>
+      <p style="margin-top:9px;font-size:12px;color:rgba(255,255,255,.38);">Não envie como: foto.jpg · IMG_4521.jpg · WhatsApp Image... 📵</p>
+    </div>
+
+    <!-- FORMULÁRIO -->
+    <div id="formArea">
+
+      <div class="field-group">
+        <label>Seu nome completo</label>
+        <input type="text" id="inputNome" placeholder="Ex: Beatriz Silva" autocomplete="name">
+      </div>
+
+      <div class="field-group">
+        <label>E-mail Shopee</label>
+        <input type="email" id="inputEmail" placeholder="seunome@shopee.com" autocomplete="email">
+        <div class="email-hint" id="emailHint">Use seu e-mail corporativo @shopee.com</div>
+      </div>
+
+      <div class="field-group">
+        <label>Sua área / time</label>
+        <input type="text" id="inputArea" placeholder="Ex: Growth · Engagement">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field-group">
+        <label>Sua foto ⚽</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="image/*">
+          <span class="upload-icon">📸</span>
+          <div class="upload-title">CLIQUE PARA SELECIONAR</div>
+          <div class="upload-sub">JPG ou PNG · Máximo 10MB<br><strong>Renomeie o arquivo antes!</strong></div>
+        </div>
+        <div class="preview-wrap" id="previewWrap">
+          <img id="previewImg" src="" alt="Preview">
+          <div class="preview-badge">✓ SELECIONADA</div>
+        </div>
+        <div class="filename-confirm" id="filenameConfirm">✅ Arquivo: <span id="filenameDisplay"></span></div>
+        <div class="filename-warn" id="filenameWarn">⚠️ O arquivo se chama <span id="filenameWarnText"></span> — verifique se renomeou com seu nome!</div>
+      </div>
+
+      <button class="btn-submit" id="btnSubmit" onclick="handleSubmit()">ENTRAR EM CAMPO 🏆</button>
+      <div class="loading-bar" id="loadingBar"><div class="loading-bar-inner" id="loadingBarInner"></div></div>
+      <div class="error-msg" id="errorMsg">Ops! Ocorreu um erro ao enviar. Tente novamente ou fale com a Karina.</div>
+
+    </div>
+
+    <!-- SUCESSO -->
+    <div class="success-screen" id="successScreen">
+      <span class="big-emoji">🏆</span>
+      <h2>FOTO RECEBIDA!</h2>
+      <p>Tudo certo! Sua foto está no vestiário.<br><br>Fique ligado(a) no TB — vai ter coisa boa esperando por você no dia do evento. Nos vemos lá! ⚽🇧🇷</p>
+    </div>
+
+  </div>
+
+  <div class="footer">Um projeto especial de <strong>Shopee Brasil</strong> · Growth · Engagement & Community</div>
+</div>
+
+<script>
+  // ── SUBSTITUA PELA URL DO SEU APPS SCRIPT APÓS IMPLANTAR ──
+  const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/shopee.com/s/AKfycbzjByqRdxO4rJusQH3YkAaCxzH9_BcEl05ZSQgZrdtcacd9MH7IzdBUK2fxV8TywMR0kQ/exec';
+
+  const fileInput   = document.getElementById('fileInput');
+  const uploadZone  = document.getElementById('uploadZone');
+  const previewWrap = document.getElementById('previewWrap');
+  const previewImg  = document.getElementById('previewImg');
+  const fnConfirm   = document.getElementById('filenameConfirm');
+  const fnDisplay   = document.getElementById('filenameDisplay');
+  const fnWarn      = document.getElementById('filenameWarn');
+  const fnWarnText  = document.getElementById('filenameWarnText');
+  const emailHint   = document.getElementById('emailHint');
+
+  // Drag & drop
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault(); uploadZone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; processFile(e.dataTransfer.files[0]); }
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) processFile(fileInput.files[0]); });
+
+  function processFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => { previewImg.src = e.target.result; previewWrap.style.display = 'block'; };
+    reader.readAsDataURL(file);
+    const base = file.name.replace(/\.[^/.]+$/, '');
+    const generic = /^(img|image|foto|photo|dsc|dscf|dsc_|pic|picture|whatsapp|screenshot|capture|\d{4,})/i;
+    fnConfirm.style.display = 'none'; fnWarn.style.display = 'none';
+    if (generic.test(base) || !base.includes(' ')) {
+      fnWarnText.textContent = '"' + file.name + '"'; fnWarn.style.display = 'block';
+    } else {
+      fnDisplay.textContent = file.name; fnConfirm.style.display = 'block';
+    }
+  }
+
+  // Validação e-mail Shopee em tempo real
+  document.getElementById('inputEmail').addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val && !val.endsWith('@shopee.com')) {
+      emailHint.textContent = '⚠️ Use apenas o e-mail @shopee.com'; emailHint.classList.add('warn');
+    } else {
+      emailHint.textContent = 'Use seu e-mail corporativo @shopee.com'; emailHint.classList.remove('warn');
+    }
+  });
+
+  async function handleSubmit() {
+    const nome  = document.getElementById('inputNome').value.trim();
+    const email = document.getElementById('inputEmail').value.trim();
+    const area  = document.getElementById('inputArea').value.trim();
+    const file  = fileInput.files[0];
+
+    if (!nome)  { alert('Coloca seu nome, craque! ⚽'); return; }
+    if (!email) { alert('Precisamos do seu e-mail Shopee!'); return; }
+    if (!email.endsWith('@shopee.com')) { alert('Use apenas o e-mail @shopee.com 🔒'); return; }
+    if (!area)  { alert('Qual é o seu time? Preenche a área!'); return; }
+    if (!file)  { alert('Faltou a foto! Sem foto o esquema não funciona 📸'); return; }
+    if (file.size > 10 * 1024 * 1024) { alert('Foto muito grande! Máximo 10MB.'); return; }
+
+    // UI de loading
+    const btn = document.getElementById('btnSubmit');
+    const bar = document.getElementById('loadingBar');
+    const barInner = document.getElementById('loadingBarInner');
+    const errMsg = document.getElementById('errorMsg');
+    btn.disabled = true; btn.textContent = 'ENVIANDO...';
+    bar.style.display = 'block'; errMsg.style.display = 'none';
+    let progress = 0;
+    const tick = setInterval(() => { progress = Math.min(progress + 8, 85); barInner.style.width = progress + '%'; }, 200);
+
+    try {
+      // Converte foto para base64
+      const base64 = await toBase64(file);
+      const payload = {
+        nome, email, area,
+        filename: file.name,
+        mimeType: file.type,
+        fileData: base64
+      };
+
+      const resp = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const result = await resp.json();
+      clearInterval(tick); barInner.style.width = '100%';
+
+      if (result.status === 'ok') {
+        setTimeout(() => {
+          document.getElementById('formArea').style.display = 'none';
+          document.getElementById('successScreen').style.display = 'block';
+        }, 400);
+      } else {
+        throw new Error(result.message || 'Erro desconhecido');
+      }
+    } catch(err) {
+      clearInterval(tick);
+      btn.disabled = false; btn.textContent = 'ENTRAR EM CAMPO 🏆';
+      bar.style.display = 'none'; barInner.style.width = '0%';
+      errMsg.style.display = 'block';
+      console.error(err);
+    }
+  }
+
+  function toBase64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload  = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Erro ao ler arquivo'));
+      r.readAsDataURL(file);
+    });
+  }
+</script>
+</body>
+</html>
